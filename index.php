@@ -5,17 +5,7 @@
     <div class="main-sidebar">
         <h2>Категории товаров</h2>
         <a href="http://<?= $_SERVER["SERVER_NAME"]?>"><h3>Все категории</h3></a>
-        <?php
-        $pdo->exec("set names utf8");
-        $sql = "SELECT * FROM categories";
-        $result = $pdo->query($sql);
-        while($category = $result->fetch()){
-        ?>
-            <a href="http://<?= $_SERVER["SERVER_NAME"].'/?id='.$category['id']?>"><h3><?php echo $category['name'];?></h3></a>
-            <p><?php echo $category['description'];?></p>
-        <?
-        }
-        ?>
+        <?php getCategory($pdo);?>
     </div>
     <div class="main-content">
         <h2>Каталог товаров</h2>
