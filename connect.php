@@ -12,4 +12,5 @@
        PDO::ATTR_EMULATE_PREPARES   => false,
    ];
    $pdo = new PDO($dsn, $user, $pass, $opt);
+   $pdo->exec("set names utf8");
 ?>

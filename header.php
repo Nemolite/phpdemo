@@ -1,3 +1,7 @@
+<!-- Подключение необходимых файлов-->
+<?php include "connect.php"; ?>
+<?php include "function.php"; ?>
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -33,4 +37,4 @@
         </div>
     </div>
 </header>
-<?php include "connect.php"; ?>
+
