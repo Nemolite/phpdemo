@@ -8,7 +8,11 @@ function dd($param){
 }
 
 function shtml($param){
-    return htmlspecialchars($param);
+    return htmlspecialchars($param, ENT_QUOTES, 'UTF-8');
+}
+
+function redirect($page){
+    include_once __DIR__ . '/'.$page.'.php';
 }
 
 // Получение товаров
@@ -16,7 +20,7 @@ function getProduct($pdo){
     if (isset($_GET['id'])&&($_GET['id']!=NULL)){
         $id = shtml($_GET['id']);
 
-        $sql = "SELECT products.name,products.description,products.price,products.country FROM categories 
+        $sql = "SELECT products.id,products.name,products.description,products.price,products.country FROM categories 
         LEFT JOIN category_product ON categories.id = category_product.category_id 
         LEFT JOIN products ON category_product.product_id = products.id 
         WHERE categories.id = :id";
@@ -35,7 +39,7 @@ function getProduct($pdo){
                       <img src="images/img1.jpg" alt="<?php echo $product['name'];?>">
                   </div>
                   <div class="btn-show-product">
-                      <form method="post" action="showproduct">
+                      <form method="post" action="http://<?= $_SERVER["SERVER_NAME"].'/showproduct.php'?>" name="showproduct">
                           <input type="hidden"  name="showprodid" value="<?= $product['id'];?>">
                           <button type="submit" class="btn btn-success">Подробно</button>
                       </form>
@@ -66,7 +70,7 @@ function getProduct($pdo){
                     <img src="images/img1.jpg" alt="<?= $product['name'];?>">
                 </div>
                 <div class="btn-show-product">
-                    <form method="post" action="showproduct">
+                    <form method="post" action="http://<?= $_SERVER["SERVER_NAME"].'/showproduct.php'?>">
                         <input type="hidden"  name="showprodid" value="<?= $product['id'];?>">
                         <button type="submit" class="btn btn-success">Подробно</button>
                     </form>
@@ -92,7 +96,7 @@ function getCategory($pdo){
     while($category = $result->fetch()){
         ?>
         <a href="http://<?= $_SERVER["SERVER_NAME"].'/?id='.$category['id']?>"><h3><?php echo $category['name'];?></h3></a>
-        <p><?php echo $category['description'];?></p>
+        <p><?= $category['description'];?></p>
         <?
     }
 }
