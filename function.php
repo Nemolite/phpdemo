@@ -127,22 +127,62 @@ function registerUsers($pdo){
             }
 
             $sql = "INSERT INTO users (name, email,pass) VALUES (:name, :email, :pass)";
-            // определяем prepared statement
             $stmt = $pdo->prepare($sql);
-            // привязываем параметры к значениям
+
             $stmt->bindValue(":name", $name);
             $stmt->bindValue(":email", $email);
             $stmt->bindValue(":pass", $pass);
-            // выполняем prepared statement
-            $affectedRowsNumber = $stmt->execute();
-            // если добавлена как минимум одна строка
-            if ($affectedRowsNumber > 0) {
+
+            $row = $stmt->execute();
+
+            if ($row > 0) {
                 echo "Вы зарегистрированы";
-                unset($affectedRowsNumber);
+                unset($row);
             }
         }
     }
     die();
     header('register.php');
+}
+
+function loginUsers($pdo){
+    if ($_POST['token'] == $_SESSION['lastToken'])
+    {
+        echo "";
+    }
+
+    else {
+        $_SESSION['lastToken'] = $_POST['token'];
+        if (isset($_POST['login'])) {
+            if (isset($_POST['name']) && (!empty($_POST['name']))) {
+                $name = shtml($_POST['name']);
+                unset($_POST['name']);
+            }
+            if (isset($_POST['pass']) && (!empty($_POST['pass']))) {
+                $pass= md5(shtml($_POST['pass']));
+                unset($_POST['pass']);
+            }
+
+            $sql = "SELECT * FROM users WHERE users.name = :name AND users.pass = :pass";
+            $stmt = $pdo->prepare($sql);
+
+            $stmt->bindValue(":name", $name);
+            $stmt->bindValue(":pass", $pass);
+
+            $row = $stmt->execute();
+
+            if ($row > 0) {
+                echo "Вы вошли";
+                unset($row);
+                header('Location:account.php');
+                die();
+            } else {
+
+                header('Location:login.php');
+                die();
+
+            }
+        }
+    }
 }
 ?>

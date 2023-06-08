@@ -35,7 +35,7 @@
             </nav>
         </div>
         <div class="header-login">
-            <p><a href="">Регистрация</a> / <a href="">Вход</a></p>
+            <p><a href="register.php">Регистрация</a> / <a href="login.php">Вход</a></p>
         </div>
     </div>
 </header>

@@ -204,3 +204,9 @@ nav {
 .register-msg {
     color:red;
 }
+
+.main-login {
+    width: 40%;
+    margin: 0 auto;
+    margin-top: 20px;
+}
