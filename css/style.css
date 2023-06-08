@@ -194,3 +194,13 @@ nav {
 .order-status {
     color:#1e7e34;
 }
+
+.main-register {
+    width: 40%;
+    margin: 0 auto;
+    margin-top: 20px;
+}
+
+.register-msg {
+    color:red;
+}
