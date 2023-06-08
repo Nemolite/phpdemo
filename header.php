@@ -1,3 +1,4 @@
+<?php session_start();?>
 <!-- Подключение необходимых файлов-->
 <?php include "connect.php"; ?>
 <?php include "function.php"; ?>

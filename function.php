@@ -104,40 +104,45 @@ function getCategory($pdo){
 // Регистрация пользователей
 
 function registerUsers($pdo){
+    if ($_POST['token'] == $_SESSION['lastToken'])
+    {
+        echo "";
+    }
 
-    if (isset($_POST['register'])) {
-        if (isset($_POST['name'])&&(!empty($_POST['name']))) {
-            $name = shtml($_POST['name']);
-            unset($_POST['name']);
-        }
-        if (isset($_POST['email'])&&(!empty($_POST['email']))) {
-            $email = shtml($_POST['email']);
-            unset($_POST['email']);
-        }
-        if (isset($_POST['pass1'])&&(!empty($_POST['pass1']))) {
-            $pass = md5(shtml($_POST['pass1']));
-            unset($_POST['pass1']);
-        }
+    else {
+        $_SESSION['lastToken'] = $_POST['token'];
 
-        $sql = "INSERT INTO users (name, email,pass) VALUES (:name, :email, :pass)";
-        // определяем prepared statement
-        $stmt = $pdo->prepare($sql);
-        // привязываем параметры к значениям
-        $stmt->bindValue(":name", $name);
-        $stmt->bindValue(":email", $email);
-        $stmt->bindValue(":pass", $pass);
-        // выполняем prepared statement
-        $affectedRowsNumber = $stmt->execute();
-        // если добавлена как минимум одна строка
-        if($affectedRowsNumber > 0 ){
-            echo "Вы зарегистрированы";
-            unset($affectedRowsNumber);
+        if (isset($_POST['register'])) {
+            if (isset($_POST['name']) && (!empty($_POST['name']))) {
+                $name = shtml($_POST['name']);
+                unset($_POST['name']);
+            }
+            if (isset($_POST['email']) && (!empty($_POST['email']))) {
+                $email = shtml($_POST['email']);
+                unset($_POST['email']);
+            }
+            if (isset($_POST['pass1']) && (!empty($_POST['pass1']))) {
+                $pass = md5(shtml($_POST['pass1']));
+                unset($_POST['pass1']);
+            }
+
+            $sql = "INSERT INTO users (name, email,pass) VALUES (:name, :email, :pass)";
+            // определяем prepared statement
+            $stmt = $pdo->prepare($sql);
+            // привязываем параметры к значениям
+            $stmt->bindValue(":name", $name);
+            $stmt->bindValue(":email", $email);
+            $stmt->bindValue(":pass", $pass);
+            // выполняем prepared statement
+            $affectedRowsNumber = $stmt->execute();
+            // если добавлена как минимум одна строка
+            if ($affectedRowsNumber > 0) {
+                echo "Вы зарегистрированы";
+                unset($affectedRowsNumber);
+            }
         }
     }
-    unset($_POST['register']);
-    unset($_POST['name']);
-    unset($_POST['email']);
-    unset($_POST['pass1']);
-    return die();
+    die();
+    header('register.php');
 }
 ?>

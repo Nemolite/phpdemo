@@ -19,12 +19,13 @@
                     <label for="pass2" class="form-label">Пароль</label>
                     <input type="password" id="pass2" name="pass2" class="form-control" required>
                 </div>
+                <input type="hidden" name="token" value="<?php echo(rand(10000,99999));?>" />
                 <button type="submit" id="register" name="register" class="btn btn-primary">Зарегистрировать</button>
 
         </form>
         <p id="register-msg"></p>
         <?php registerUsers($pdo); ?>
-        <?php dd($_POST);?>
+
     </div>
 </div>
 <?php include_once __DIR__ . '/footer.php'; ?>
