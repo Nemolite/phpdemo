@@ -4,7 +4,10 @@
  */
 
 function dd($param){
+    echo '<pre>';
     print_r($param);
+    echo '</pre>';
+
 }
 
 function shtml($param){
@@ -15,7 +18,11 @@ function redirect($page){
     include_once __DIR__ . '/'.$page.'.php';
 }
 
-// Получение товаров
+/**
+ * Получение товаров
+ * @param $pdo
+ * @return void
+ */
 function getProduct($pdo){
     if (isset($_GET['id'])&&($_GET['id']!=NULL)){
         $id = shtml($_GET['id']);
@@ -88,7 +95,11 @@ function getProduct($pdo){
        }
 }
 
-// Получение категории
+/**
+ * Получение категории
+ * @param $pdo
+ * @return void
+ */
 function getCategory($pdo){
     $pdo->exec("set names utf8");
     $sql = "SELECT * FROM categories";
@@ -101,7 +112,11 @@ function getCategory($pdo){
     }
 }
 
-// Регистрация пользователей
+/**
+ * Регистрация пользователz
+ * @param $pdo
+ * @return void
+ */
 
 function registerUsers($pdo){
     if ($_POST['token'] == $_SESSION['lastToken'])
@@ -126,25 +141,41 @@ function registerUsers($pdo){
                 unset($_POST['pass1']);
             }
 
-            $sql = "INSERT INTO users (name, email,pass) VALUES (:name, :email, :pass)";
-            $stmt = $pdo->prepare($sql);
+            $stmt = $pdo->prepare('SELECT COUNT(id) FROM users WHERE email=:email OR name=:name');
+            $stmt->execute([
+                'email' => $email,
+                'name' => $name,
+            ]);
+            if ($stmt->fetch() > 0) {
+                echo "Такой пользователь уже существует";
+            } else {
 
-            $stmt->bindValue(":name", $name);
-            $stmt->bindValue(":email", $email);
-            $stmt->bindValue(":pass", $pass);
+                $sqlinsert = "INSERT INTO users (name, email,pass) VALUES (:name, :email, :pass)";
+                $st = $pdo->prepare($sqlinsert);
 
-            $row = $stmt->execute();
+                $st->bindValue(":name", $name);
+                $st->bindValue(":email", $email);
+                $st->bindValue(":pass", $pass);
 
-            if ($row > 0) {
-                echo "Вы зарегистрированы";
-                unset($row);
-            }
-        }
-    }
+                $row = $st->execute();
+
+                if ($row > 0) {
+                    echo "Вы зарегистрированы";
+                    unset($row);
+                }
+
+            } // Проверка на существование пользователя в БД
+        } // Проверка нажатия кнопки $_POST['register']
+    } // Проверка токена $_POST['token']
     die();
     header('register.php');
 }
 
+/**
+ * Функция авторизации пользователя
+ * @param $pdo
+ * @return void
+ */
 function loginUsers($pdo){
     if ($_POST['token'] == $_SESSION['lastToken'])
     {
@@ -153,6 +184,7 @@ function loginUsers($pdo){
 
     else {
         $_SESSION['lastToken'] = $_POST['token'];
+
         if (isset($_POST['login'])) {
             if (isset($_POST['name']) && (!empty($_POST['name']))) {
                 $name = shtml($_POST['name']);
@@ -163,24 +195,30 @@ function loginUsers($pdo){
                 unset($_POST['pass']);
             }
 
-            $sql = "SELECT * FROM users WHERE users.name = :name AND users.pass = :pass";
+            $sql = "SELECT users.id,users.rols,users.name FROM users WHERE users.name = :name AND users.pass = :pass";
             $stmt = $pdo->prepare($sql);
 
             $stmt->bindValue(":name", $name);
             $stmt->bindValue(":pass", $pass);
 
-            $row = $stmt->execute();
+            $stmt->execute();
 
-            if ($row > 0) {
-                echo "Вы вошли";
-                unset($row);
+            while($user = $stmt ->fetch()){
+                echo $user['id'];
+                if(isset($user['id'])&&(!empty($user['id']))){
+                    $id= $user['id'];
+                    $user= $user['name'];
+                }
+            }
+            if (isset($id)&&(!empty($id))) {
+                $_SESSION['id'] = $id;
+                echo "Добро пожаловать ".$user.'!';
                 header('Location:account.php');
                 die();
             } else {
-
+                print "Нет такого пользователя";
                 header('Location:login.php');
                 die();
-
             }
         }
     }
