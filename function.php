@@ -294,6 +294,10 @@ function getDataUser($pdo,$userid){
     return $data;
 }
 
+/**
+ * Отправление товаров в корзину
+ * @return void
+ */
 function sendProductToCart()
 {
     if (isset($_POST['prodid']) && !empty($_POST['prodid'])) {
@@ -308,11 +312,37 @@ function sendProductToCart()
         $data = [$userid=>$productid];
         $_SESSION['orders'][] = $data;
 
-
         echo "Товар добавлен в корзину";
     }
 
-    dd($_SESSION);
+}
 
+function sendOrders($pdo){
+    if (isset($_POST['checkout'])&&(!empty($_POST['checkout']))){
+        $userid = $_SESSION['id'];
+        if (isset($_SESSION['orders'])&&!empty($_SESSION['orders'])) {
+            $session = $_SESSION['orders'];
+        }
+        $datauser = getDataUser($pdo,$userid);
+        foreach ($session as $value){
+            foreach ($value as $user_id=>$productid){
+                if($user_id==$userid){
+                    $productids[] = $productid;
+                }
+
+            } // foreach
+
+        } // foreach
+
+        $strproducts = implode(",", $productids);
+        $sql ="SELECT * FROM products WHERE id IN ( $strproducts )";
+        $stmt = $pdo->query($sql);
+
+        while($product = $stmt->fetch()){
+            // insert
+        }
+
+
+    }
 }
 ?>

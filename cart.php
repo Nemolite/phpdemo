@@ -11,8 +11,11 @@
         if (isset($_SESSION['orders'])&&!empty($_SESSION['orders'])) {
             $session = $_SESSION['orders'];
             foreach ($session as $value){
-                foreach ($value as $user=>$productid){
-                    $productids[] = $productid;
+                foreach ($value as $user_id=>$productid){
+                    if($user_id==$userid){
+                        $productids[] = $productid;
+                    }
+
                 }
 
             }
@@ -45,7 +48,7 @@
                     <td><?php echo $product['description']?></td>
                     <td><?php echo $product['image']?></td>
                     <td><?php echo $product['country']?></td>
-                    <td>Удалить</td>
+                    <td><a href="" class="btn btn-danger">Удалить</a></td>
                 </tr>
                 <?php
                 $index++;
@@ -56,6 +59,13 @@
         </table>
                 <?php
                 printf("Общая стоимость заказа = %d",$total);
+                ?>
+                <form method="post" action="" name="checkout">
+                    <input type="hidden"  name="prodid" value="<?= $userid;?>">
+                    <button type="submit" name="checkout" class="btn btn-primary checkout">Оформить заказ</button>
+                </form>
+                <?php
+                sendOrders($pdo);
         } else {
             echo "Ваша корзина пуста";
         }
