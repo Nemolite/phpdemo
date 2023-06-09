@@ -26,7 +26,7 @@ function redirect($page){
 function getProduct($pdo){
     if (isset($_GET['id'])&&($_GET['id']!=NULL)){
         $id = shtml($_GET['id']);
-
+        unset($_GET['id']);
         $sql = "SELECT products.id,products.name,products.description,products.price,products.country FROM categories 
         LEFT JOIN category_product ON categories.id = category_product.category_id 
         LEFT JOIN products ON category_product.product_id = products.id 
@@ -52,10 +52,11 @@ function getProduct($pdo){
                       </form>
                   </div>
 
-                  <form method="post" action="cartproduct">
+                  <form method="post" action="" name="cartproductform">
                       <input type="hidden"  name="prodid" value="<?= $product['id'];?>">
-                      <button type="submit" class="btn btn-success">Добавить в корзину</button>
+                      <button type="submit"  name="cartproduct" class="btn btn-success cartproduct">Добавить в корзину</button>
                   </form>
+
               </div>
          <?php } ?>
           </div>
@@ -83,16 +84,21 @@ function getProduct($pdo){
                     </form>
                 </div>
 
-                <form method="post" action="cartproduct">
+                <form method="post" action="" name="cartproductform">
                     <input type="hidden"  name="prodid" value="<?= $product['id'];?>">
-                    <button type="submit" class="btn btn-success">Добавить в корзину</button>
+                    <button type="submit" class="btn btn-success cartproduct">Добавить в корзину</button>
                 </form>
+
             </div>
           <?php } ?>
           </div>
         </div>
             <?
        }
+    ?>
+     <p id="result_output"></p>
+    <?php
+    sendProductToCart();
 }
 
 /**
@@ -113,7 +119,7 @@ function getCategory($pdo){
 }
 
 /**
- * Регистрация пользователz
+ * Регистрация пользователя
  * @param $pdo
  * @return void
  */
@@ -189,9 +195,7 @@ function loginUsers($pdo){
     if ($_POST['token'] == $_SESSION['lastToken'])
     {
         echo "";
-    }
-
-    else {
+    } else {
         $_SESSION['lastToken'] = $_POST['token'];
 
         if (isset($_POST['login'])) {
@@ -288,5 +292,27 @@ function getDataUser($pdo,$userid){
     }
 
     return $data;
+}
+
+function sendProductToCart()
+{
+    if (isset($_POST['prodid']) && !empty($_POST['prodid'])) {
+        $productid = $_POST['prodid'];
+    }
+
+    if (isset($_SESSION['id']) && !empty($_SESSION['id'])) {
+        $userid = $_SESSION['id'];
+    }
+
+    if ((isset($productid)) && (isset($userid))) {
+        $data = [$userid=>$productid];
+        $_SESSION['orders'][] = $data;
+
+
+        echo "Товар добавлен в корзину";
+    }
+
+    dd($_SESSION);
+
 }
 ?>

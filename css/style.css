@@ -217,3 +217,9 @@ nav {
     margin: 0 auto;
     min-height: calc(100vh - 200px);
 }
+
+.cart-main {
+    width: 80%;
+    margin: 0 auto;
+    min-height: calc(100vh - 200px);
+}

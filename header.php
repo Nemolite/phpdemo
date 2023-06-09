@@ -25,12 +25,12 @@
         <div class="header-menu">
             <nav>
                 <ul>
-                    <li><a href="">Главная</a></li>
+                    <li><a href="index.php">Главная</a></li>
                     <?php
                     if (isset($_SESSION['id'])&&!empty($_SESSION['id'])) {
                     ?>
-                    <li><a href="">Корзина</a></li>
-                    <li><a href="">Аккаунт</a></li>
+                    <li><a href="cart.php">Корзина</a></li>
+                    <li><a href="account.php">Аккаунт</a></li>
                     <?php } ?>
                     <li><a href="">О нас</a></li>
                     <li><a href="">Наши контакты</a></li>
