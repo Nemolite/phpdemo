@@ -1,11 +1,12 @@
 <?php include_once __DIR__ . '/header.php'; ?>
+<div class="account-main">
+<h1>Панель управления</h1>
 <?php
 if (isset($_SESSION['id'])&&!empty($_SESSION['id'])) {
     $userid = $_SESSION['id'];
     $user = getDataUser($pdo,$userid);
-    echo '<h3>';
-    echo $user['name'];
-    echo '</h3>';
+    printf('<h3>Пользователь %s</h3>',$user['name']);
+    printf('<h3>Email %s</h3>',$user['email']);
 ?>
 
 <?php
@@ -19,5 +20,5 @@ else {
     //header('Location: ../chek.php'); exit();
 }
 ?>
-
+</div>
 <?php include_once __DIR__ . '/footer.php'; ?>

@@ -209,4 +209,11 @@ nav {
     width: 40%;
     margin: 0 auto;
     margin-top: 20px;
+    min-height: calc(100vh - 200px);
+}
+
+.account-main {
+    width: 80%;
+    margin: 0 auto;
+    min-height: calc(100vh - 200px);
 }
