@@ -39,7 +39,21 @@
             </nav>
         </div>
         <div class="header-login">
+            <?php
+            if (isset($_SESSION['id'])&&!empty($_SESSION['id'])) {
+            ?>
+                <p>Привет, <?php echo getNameUser($pdo);?>
+                <a href="http://<?= $_SERVER["SERVER_NAME"]?>/?exit=true">Выход</a></p>
+                <?php
+                 if (isset($_GET['exit'])){
+                     unset($_SESSION['id']);
+                     header('index.php');
+                 }
+             ?>
+
+            <?php } else { ?>
             <p><a href="register.php">Регистрация</a> / <a href="login.php">Вход</a></p>
+            <?php } ?>
         </div>
     </div>
 </header>

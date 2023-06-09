@@ -243,4 +243,50 @@ function loginUsers($pdo){
         }
     }
 }
+
+/**
+ * Получение имени пользователя
+ * @param $pdo
+ * @return mixed
+ */
+function getNameUser($pdo){
+    if (isset($_SESSION['id'])&&!empty($_SESSION['id'])) {
+        $userid = $_SESSION['id'];
+    }
+
+    $sql = "SELECT users.name FROM users WHERE users.id = :id";
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindValue(":id", $userid);
+
+    $stmt->execute();
+
+    while($user = $stmt ->fetch()) {
+        if (isset($user['name']) && (!empty($user['name']))) {
+            $name = $user['name'];
+            break;
+        }
+    }
+
+    return $name;
+}
+
+function getDataUser($pdo,$userid){
+    $sql = "SELECT * FROM users WHERE users.id = :id";
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindValue(":id", $userid);
+    $stmt->execute();
+
+    while($user = $stmt ->fetch()){
+        if(isset($user['id'])&&(!empty($user['id']))){
+            $data = [
+                'id'=> $user['id'],
+                'name'=> $user['name'],
+                'email'=> $user['email']
+            ];
+
+        }
+    }
+
+    return $data;
+}
 ?>

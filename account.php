@@ -1,11 +1,13 @@
 <?php include_once __DIR__ . '/header.php'; ?>
-<?php echo $_SESSION['id'];?>
 <?php
 if (isset($_SESSION['id'])&&!empty($_SESSION['id'])) {
-
-
-
+    $userid = $_SESSION['id'];
+    $user = getDataUser($pdo,$userid);
+    echo '<h3>';
+    echo $user['name'];
+    echo '</h3>';
 ?>
+
 <?php
 }
 else {
