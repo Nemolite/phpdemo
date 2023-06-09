@@ -141,12 +141,21 @@ function registerUsers($pdo){
                 unset($_POST['pass1']);
             }
 
-            $stmt = $pdo->prepare('SELECT COUNT(id) FROM users WHERE email=:email OR name=:name');
+            $stmt = $pdo->prepare('SELECT * FROM users WHERE email=:email OR name=:name');
             $stmt->execute([
                 'email' => $email,
                 'name' => $name,
             ]);
-            if ($stmt->fetch() > 0) {
+
+                while($user = $stmt ->fetch()){
+                if(isset($user['id'])&&(!empty($user['id']))) {
+                    $id = $user['id'];
+                    break;
+                } else {
+                    unset($id);
+                }
+            }
+            if (isset($id)&&(!empty($id))) {
                 echo "Такой пользователь уже существует";
             } else {
 
@@ -204,20 +213,31 @@ function loginUsers($pdo){
             $stmt->execute();
 
             while($user = $stmt ->fetch()){
-                echo $user['id'];
                 if(isset($user['id'])&&(!empty($user['id']))){
                     $id= $user['id'];
-                    $user= $user['name'];
+                    $name= $user['name'];
                 }
             }
             if (isset($id)&&(!empty($id))) {
                 $_SESSION['id'] = $id;
-                echo "Добро пожаловать ".$user.'!';
-                header('Location:account.php');
+                echo "Добро пожаловать, $name !";
+                ?>
+                <script>
+                window.setTimeout(function(){
+                    window.location.href = "account.php" + window.location.search.substring(1);
+                }, 3000);
+                </script>
+                <?php
                 die();
             } else {
                 print "Нет такого пользователя";
-                header('Location:login.php');
+                ?>
+                <script>
+                    window.setTimeout(function(){
+                        window.location.href = "login.php" + window.location.search.substring(1);
+                    }, 3000);
+                </script>
+                <?php
                 die();
             }
         }

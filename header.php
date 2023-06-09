@@ -26,8 +26,12 @@
             <nav>
                 <ul>
                     <li><a href="">Главная</a></li>
+                    <?php
+                    if (isset($_SESSION['id'])&&!empty($_SESSION['id'])) {
+                    ?>
                     <li><a href="">Корзина</a></li>
                     <li><a href="">Аккаунт</a></li>
+                    <?php } ?>
                     <li><a href="">О нас</a></li>
                     <li><a href="">Наши контакты</a></li>
 
