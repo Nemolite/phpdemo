@@ -7,7 +7,6 @@
         getOrders($pdo,$userid);
         ?>
 
-
         <?php
     }
     else {
