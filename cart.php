@@ -61,7 +61,6 @@
                 printf("Общая стоимость заказа = %d",$total);
                 ?>
                 <form method="post" action="" name="checkout">
-                    <input type="hidden"  name="prodid" value="<?= $userid;?>">
                     <button type="submit" name="checkout" class="btn btn-primary checkout">Оформить заказ</button>
                 </form>
                 <?php

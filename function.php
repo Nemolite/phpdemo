@@ -314,16 +314,20 @@ function sendProductToCart()
 
         echo "Товар добавлен в корзину";
     }
-
 }
 
 function sendOrders($pdo){
-    if (isset($_POST['checkout'])&&(!empty($_POST['checkout']))){
+        dd($_SESSION);
         $userid = $_SESSION['id'];
         if (isset($_SESSION['orders'])&&!empty($_SESSION['orders'])) {
             $session = $_SESSION['orders'];
         }
         $datauser = getDataUser($pdo,$userid);
+        dd($datauser);
+
+
+
+
         foreach ($session as $value){
             foreach ($value as $user_id=>$productid){
                 if($user_id==$userid){
@@ -343,6 +347,6 @@ function sendOrders($pdo){
         }
 
 
-    }
+
 }
 ?>
