@@ -364,13 +364,14 @@ function sendOrders($pdo){
              } // foreach
 
          } // foreach
-
+            // Удаление заказа из сессии
+         deleteOrderSession();
          echo "Заказ оформлен";
          ?>
          <script>
              window.setTimeout(function(){
                  window.location.href = "checkout.php" + window.location.search.substring(1);
-             }, 3000);
+              }, 3000);
          </script>
         <?php
      } //  tokenorders
@@ -389,4 +390,86 @@ function getIdOrder($pdo,$userid){
     $orderid = $sth->fetch(PDO::FETCH_COLUMN);
     return $orderid;
 }
+
+/**
+ * Удаление и сесси заказа
+ * @return void
+ */
+function deleteOrderSession(){
+    foreach ($_SESSION['orders'] as $arr){
+        foreach ($arr as $userid=>$productid){
+
+            if ($_SESSION['id']==$userid) {
+                unset($_SESSION['orders']);
+
+            }
+        }
+    }
+
+}
+
+/**
+ * Получение заказа пользователя
+ * @param $pdo
+ * @param $userid
+ * @return void
+ */
+function getOrders($pdo,$userid){
+    $sql = "SELECT * FROM orders WHERE orders.userid = :userid";
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindValue(":userid", $userid);
+    $stmt->execute();
+    ?>
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">№пп</th>
+            <th scope="col">Номер заказа</th>
+            <th scope="col">Товары</th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php
+        $index = 1;
+        while($order = $stmt->fetch()){
+            ?>
+            <tr>
+                <th scope="row"><?php echo $index;?></th>
+                <td><?php echo $order['id']?></td>
+
+                <td>
+                    <?php
+                    // Вывод товаров в заказе
+                    $orderid = $order['id'];
+                    getOrderProducts($pdo,$orderid);
+                    ?>
+                </td>
+            </tr>
+            <?php
+            $index++;
+        }
+        ?>
+        </tbody>
+    </table>
+
+    <?php
+}
+
+function getOrderProducts($pdo,$orderid){
+    $sql = "SELECT products.id,products.name,products.description,products.price,products.country FROM products  
+        LEFT JOIN order_product ON products.id = order_product.product_id   
+        LEFT JOIN orders ON order_product.order_id = orders.id 
+        WHERE orders.id = :orderid";
+
+    $result = $pdo->prepare($sql);
+    $result->bindValue(":orderid", $orderid);
+    $result->execute();
+    while ($product = $result->fetch()) {
+        echo $product['name'];
+        echo $product['description'];
+        echo $product['price'];
+        echo $product['country'];
+    }
+
+    }
 ?>
