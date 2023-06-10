@@ -274,6 +274,12 @@ function getNameUser($pdo){
     return $name;
 }
 
+/**
+ * Получение данных пользователя
+ * @param $pdo
+ * @param $userid
+ * @return array
+ */
 function getDataUser($pdo,$userid){
     $sql = "SELECT * FROM users WHERE users.id = :id";
     $stmt = $pdo->prepare($sql);
@@ -316,37 +322,42 @@ function sendProductToCart()
     }
 }
 
+/**
+ * Формирование заказа в таблицах orders и order_product
+ * @param $pdo
+ * @return void
+ */
 function sendOrders($pdo){
-        dd($_SESSION);
         $userid = $_SESSION['id'];
         if (isset($_SESSION['orders'])&&!empty($_SESSION['orders'])) {
             $session = $_SESSION['orders'];
         }
         $datauser = getDataUser($pdo,$userid);
-        dd($datauser);
 
+        // Создаем в заказ
+        $sqlinsert = "INSERT INTO orders (userid) VALUES (:userid)";
+        $st = $pdo->prepare($sqlinsert);
+        $st->bindValue(":userid", $userid);
+        $st->execute();
 
+        // Получаем id заказа
+        $sth = $pdo->prepare("SELECT orders.id FROM orders WHERE orders.userid = ?");
+        $sth->execute(array($userid));
+        $orderid = $sth->fetch(PDO::FETCH_COLUMN);
 
-
+        // Заполняем промежуточную таблицу order_product
+        $sqlinsert = "INSERT INTO order_product (product_id,order_id) VALUES (:productid,:orderid)";
         foreach ($session as $value){
-            foreach ($value as $user_id=>$productid){
-                if($user_id==$userid){
-                    $productids[] = $productid;
-                }
+                foreach ($value as $user_id=>$productid){
+                    if($user_id==$userid){
+                        $st = $pdo->prepare($sqlinsert);
+                        $st->bindValue(":productid",$productid );
+                        $st->bindValue(":orderid", $orderid);
+                        $st->execute();
+
+                    }
+                } // foreach
 
             } // foreach
-
-        } // foreach
-
-        $strproducts = implode(",", $productids);
-        $sql ="SELECT * FROM products WHERE id IN ( $strproducts )";
-        $stmt = $pdo->query($sql);
-
-        while($product = $stmt->fetch()){
-            // insert
-        }
-
-
-
 }
 ?>
