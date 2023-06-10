@@ -69,6 +69,7 @@
                     <button type="submit" name="checkout" class="btn btn-primary checkout">Оформить заказ</button>
                 </form>
                 <?php
+
                 sendOrders($pdo);
         } else {
             echo "Ваша корзина пуста";

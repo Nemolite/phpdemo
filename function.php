@@ -471,5 +471,6 @@ function getOrderProducts($pdo,$orderid){
         echo $product['country'];
     }
 
+
     }
 ?>
