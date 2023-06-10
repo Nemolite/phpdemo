@@ -61,6 +61,7 @@
                 printf("Общая стоимость заказа = %d",$total);
                 ?>
                 <form method="post" action="" name="checkout">
+                    <input type="hidden" name="tokenorders" value="<?php echo(rand(10000,99999));?>" />
                     <button type="submit" name="checkout" class="btn btn-primary checkout">Оформить заказ</button>
                 </form>
                 <?php

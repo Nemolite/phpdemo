@@ -328,36 +328,65 @@ function sendProductToCart()
  * @return void
  */
 function sendOrders($pdo){
-        $userid = $_SESSION['id'];
-        if (isset($_SESSION['orders'])&&!empty($_SESSION['orders'])) {
-            $session = $_SESSION['orders'];
-        }
-        $datauser = getDataUser($pdo,$userid);
 
-        // Создаем в заказ
-        $sqlinsert = "INSERT INTO orders (userid) VALUES (:userid)";
-        $st = $pdo->prepare($sqlinsert);
-        $st->bindValue(":userid", $userid);
-        $st->execute();
+     if ($_POST['tokenorders'] == $_SESSION['lastTokenOrder'])
+     {
+         echo "";
+     } else {
+         $_SESSION['lastTokenOrder'] = $_POST['tokenorders'];
 
-        // Получаем id заказа
-        $sth = $pdo->prepare("SELECT orders.id FROM orders WHERE orders.userid = ?");
-        $sth->execute(array($userid));
-        $orderid = $sth->fetch(PDO::FETCH_COLUMN);
+         $userid = $_SESSION['id'];
+         if (isset($_SESSION['orders']) && !empty($_SESSION['orders'])) {
+             $session = $_SESSION['orders'];
+         }
+         $datauser = getDataUser($pdo, $userid);
 
-        // Заполняем промежуточную таблицу order_product
-        $sqlinsert = "INSERT INTO order_product (product_id,order_id) VALUES (:productid,:orderid)";
-        foreach ($session as $value){
-                foreach ($value as $user_id=>$productid){
-                    if($user_id==$userid){
-                        $st = $pdo->prepare($sqlinsert);
-                        $st->bindValue(":productid",$productid );
-                        $st->bindValue(":orderid", $orderid);
-                        $st->execute();
+         // Создаем в заказ
+         $sqlinsert = "INSERT INTO orders (userid) VALUES (:userid)";
+         $st = $pdo->prepare($sqlinsert);
+         $st->bindValue(":userid", $userid);
+         $st->execute();
 
-                    }
-                } // foreach
+         // Получаем id заказа
+         $orderid = getIdOrder($pdo, $userid);
 
-            } // foreach
+         // Заполняем промежуточную таблицу order_product
+         $sqlinsert = "INSERT INTO order_product (product_id,order_id) VALUES (:productid,:orderid)";
+         foreach ($session as $value) {
+             foreach ($value as $user_id => $productid) {
+                 if ($user_id == $userid) {
+                     $st = $pdo->prepare($sqlinsert);
+                     $st->bindValue(":productid", $productid);
+                     $st->bindValue(":orderid", $orderid);
+                     $st->execute();
+
+                 }
+             } // foreach
+
+         } // foreach
+
+         echo "Заказ оформлен";
+         ?>
+         <script>
+             window.setTimeout(function(){
+                 window.location.href = "checkout.php" + window.location.search.substring(1);
+             }, 3000);
+         </script>
+        <?php
+     } //  tokenorders
+}
+
+/**
+ * Получение id заказа
+ * @param $pdo
+ * @param $userid
+ * @return void
+ */
+function getIdOrder($pdo,$userid){
+
+    $sth = $pdo->prepare("SELECT orders.id FROM orders WHERE orders.userid = ?");
+    $sth->execute(array($userid));
+    $orderid = $sth->fetch(PDO::FETCH_COLUMN);
+    return $orderid;
 }
 ?>
