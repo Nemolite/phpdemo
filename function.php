@@ -14,10 +14,6 @@ function shtml($param){
     return htmlspecialchars($param, ENT_QUOTES, 'UTF-8');
 }
 
-function redirect($page){
-    include_once __DIR__ . '/'.$page.'.php';
-}
-
 /**
  * Получение товаров
  * @param $pdo

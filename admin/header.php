@@ -26,12 +26,12 @@
         <div class="header-menu">
             <nav>
                 <ul>
-                    <li><a href="index.php">Главная</a></li>
+                    <li><a href="http://<?=$_SERVER["SERVER_NAME"]?>/index.php">Главная</a></li>
                     <?php
                     if (isset($_SESSION['id'])&&!empty($_SESSION['id'])) {
                         ?>
-                        <li><a href="cart.php">Корзина</a></li>
-                        <li><a href="account.php">Аккаунт</a></li>
+                        <li><a href="http://<?=$_SERVER["SERVER_NAME"]?>/cart.php">Корзина</a></li>
+                        <li><a href="http://<?=$_SERVER["SERVER_NAME"]?>/account.php">Аккаунт</a></li>
                     <?php } ?>
                     <li><a href="">О нас</a></li>
                     <li><a href="">Наши контакты</a></li>

@@ -10,7 +10,7 @@
     if($user['rols']) {
         echo  "Привет, Администратор";
         ?>
-
+    <div class="main-admin">
         <div class="main-sidebar">
             <div class="header-menu-admin">
                 <nav>
@@ -26,8 +26,33 @@
 
         </div> <!-- class="main-sidebar" -->
         <div class="main-content">
+        <div class="main">
+            <div class="main-sidebar">
+                <h3>Категории товаров</h3>
+                <?php getAdminCategory($pdo);?>
+            </div>
+            <div class="main-content">
+                <h2>Добавление категории</h2>
+                <form method="post" action="" name="admincategory">
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Категория товаров</label>
+                        <input type="text" class="form-control" id="name" name="name">
+
+                    </div>
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Описание категории</label>
+                        <input type="hidden" name="tokenadmincategory" value="<?php echo(rand(10000,99999));?>" />
+                        <input type="text" class="form-control" id="description" name="description">
+
+                    </div>
+                    <button type="submit" class="btn btn-primary">Сохранить</button>
+                </form>
+                <?php setAdminCategory($pdo);?>
+            </div>
+        </div>
 
         </div><!-- class="main-content" -->
+    </div><!-- class="main-admin" -->
         <?php
     }
         ?>

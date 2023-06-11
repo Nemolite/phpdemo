@@ -239,3 +239,8 @@ nav {
     list-style-type: none;
 
 }
+
+.main-admin {
+    display: flex;
+    flex-direction: row;
+}

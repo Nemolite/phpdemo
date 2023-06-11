@@ -26,7 +26,7 @@
 
         </div> <!-- class="main-sidebar" -->
         <div class="main-content">
-
+        <h2>Заказы</h2>
         </div><!-- class="main-content" -->
         <?php
     }
