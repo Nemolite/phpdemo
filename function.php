@@ -1,6 +1,6 @@
 <?php
 /**
- * Функции
+ * Функции для фрот, для аккаунта пользователя
  */
 
 function dd($param){
@@ -291,7 +291,8 @@ function getDataUser($pdo,$userid){
             $data = [
                 'id'=> $user['id'],
                 'name'=> $user['name'],
-                'email'=> $user['email']
+                'email'=> $user['email'],
+                'rols'=> $user['rols']
             ];
 
         }
@@ -469,6 +470,7 @@ function getOrderProducts($pdo,$orderid){
         echo $product['description'];
         echo $product['price'];
         echo $product['country'];
+        echo "<br>";
     }
 
 

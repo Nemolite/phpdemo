@@ -229,3 +229,13 @@ nav {
     margin: 0 auto;
     min-height: calc(100vh - 200px);
 }
+
+/* Администратор */
+.header-menu-admin {
+    color: #1e7e34;
+}
+
+.header-menu-admin ul li {
+    list-style-type: none;
+
+}
