@@ -244,3 +244,17 @@ nav {
     display: flex;
     flex-direction: row;
 }
+
+.main-sidebar-products {
+    width: 30%;
+}
+.main-content-products {
+    width: 60%;
+    margin-bottom: 10px;
+}
+
+.main-product-admin {
+    width: 100%;
+    margin: 0 auto;
+}
+

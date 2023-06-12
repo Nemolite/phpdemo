@@ -41,10 +41,10 @@
                     </div>
                     <div class="mb-3">
                         <label for="description" class="form-label">Описание категории</label>
-                        <input type="hidden" name="tokenadmincategory" value="<?php echo(rand(10000,99999));?>" />
                         <input type="text" class="form-control" id="description" name="description">
 
                     </div>
+                    <input type="hidden" name="tokenadmincategory" value="<?php echo(rand(10000,99999));?>" />
                     <button type="submit" class="btn btn-primary">Сохранить</button>
                 </form>
                 <?php setAdminCategory($pdo);?>
