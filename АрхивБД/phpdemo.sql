@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: 127.0.0.1:3306
--- Время создания: Июн 12 2023 г., 20:46
+-- Время создания: Июн 10 2023 г., 13:22
 -- Версия сервера: 5.7.39
 -- Версия PHP: 7.4.30
 
@@ -40,9 +40,7 @@ CREATE TABLE `categories` (
 INSERT INTO `categories` (`id`, `name`, `description`) VALUES
 (1, 'Категория1', 'Описание категории1'),
 (2, 'Категория2', 'Описание категории2'),
-(3, 'Категория3', 'Описание категории3'),
-(4, 'Категория4', 'Описание категории4'),
-(11, 'Категория5', 'Описание категории 5');
+(3, 'Категория3', 'Описание категории3');
 
 -- --------------------------------------------------------
 
@@ -68,10 +66,7 @@ INSERT INTO `category_product` (`id`, `category_id`, `product_id`) VALUES
 (5, 2, 5),
 (6, 3, 1),
 (7, 3, 2),
-(8, 3, 3),
-(9, 1, 9),
-(10, 2, 9),
-(11, 3, 9);
+(8, 3, 3);
 
 -- --------------------------------------------------------
 
@@ -82,26 +77,10 @@ INSERT INTO `category_product` (`id`, `category_id`, `product_id`) VALUES
 CREATE TABLE `orders` (
   `id` bigint(20) NOT NULL,
   `userid` bigint(20) NOT NULL,
-  `email` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `phone` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `address` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Дамп данных таблицы `orders`
---
-
-INSERT INTO `orders` (`id`, `userid`, `email`, `phone`, `address`) VALUES
-(39, 1, NULL, NULL, NULL),
-(40, 1, NULL, NULL, NULL),
-(41, 1, 'g16052015@mail.ru', '12342434', 'Шумерля'),
-(42, 1, 'g16052015@mail.ru', NULL, NULL),
-(43, 1, 'g16052015@mail.ru', '1234213', 'SFsadf'),
-(44, 1, 'g16052015@mail.ru', NULL, NULL),
-(45, 1, 'g16052015@mail.ru', '1234123', 'Шумерля'),
-(46, 1, 'g16052015@mail.ru', NULL, NULL),
-(47, 1, 'g16052015@mail.ru', '23453245', 'Шумерля'),
-(48, 1, 'g16052015@mail.ru', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -114,28 +93,6 @@ CREATE TABLE `order_product` (
   `product_id` bigint(20) NOT NULL,
   `order_id` bigint(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Дамп данных таблицы `order_product`
---
-
-INSERT INTO `order_product` (`id`, `product_id`, `order_id`) VALUES
-(129, 6, 39),
-(130, 8, 40),
-(131, 7, 43),
-(132, 1, 44),
-(133, 6, 45),
-(134, 8, 46),
-(135, 6, 46),
-(136, 9, 46),
-(137, 6, 47),
-(138, 7, 47),
-(139, 8, 47),
-(140, 9, 47),
-(141, 6, 48),
-(142, 7, 48),
-(143, 8, 48),
-(144, 9, 48);
 
 -- --------------------------------------------------------
 
@@ -161,11 +118,7 @@ INSERT INTO `products` (`id`, `name`, `price`, `description`, `image`, `country`
 (2, 'Товар2', 200, 'Описание товара2', NULL, 'Германия'),
 (3, 'Товар3', 200, 'Описание товара3', NULL, 'Россия'),
 (4, 'Товар4', 400, 'Описание товара4', NULL, 'Япония'),
-(5, 'Товар5', 300, 'Описание товара5', NULL, 'Россия'),
-(6, 'Товар6', 100, 'Описание товара6', 'verbes-provence.jpg', 'Россия'),
-(7, 'Товар 7', 250, 'Описание категории 7', '(Unmowed)_grass_3.JPG', 'Россия'),
-(8, 'root', 300, 'Описание категории 5', 'лекарственные-растения.jpg', 'Россия'),
-(9, 'Товар8', 450, 'Описание категории 8', '1660027132_2.jpg', 'Россия');
+(5, 'Товар5', 300, 'Описание товара5', NULL, 'Россия');
 
 -- --------------------------------------------------------
 
@@ -178,7 +131,7 @@ CREATE TABLE `users` (
   `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `pass` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `rols` tinyint(1) NOT NULL
+  `rols` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -243,31 +196,31 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT для таблицы `categories`
 --
 ALTER TABLE `categories`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT для таблицы `category_product`
 --
 ALTER TABLE `category_product`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT для таблицы `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT для таблицы `order_product`
 --
 ALTER TABLE `order_product`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=145;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT для таблицы `products`
 --
 ALTER TABLE `products`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT для таблицы `users`
