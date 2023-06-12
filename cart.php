@@ -3,10 +3,6 @@
     <h1>Ваша корзина</h1>
     <?php
     if (isset($_SESSION['id'])&&!empty($_SESSION['id'])) {
-    $userid = $_SESSION['id'];
-    ?>
-    <?php
-    if (isset($_SESSION['id'])&&!empty($_SESSION['id'])) {
         $userid = $_SESSION['id'];
         $user = getDataUser($pdo,$userid);
         printf('<h3>Пользователь %s</h3>',$user['name']);
@@ -64,13 +60,13 @@
                 <?php
                 printf("Общая стоимость заказа = %d",$total);
                 ?>
-                <form method="post" action="" name="checkout">
-                    <input type="hidden" name="tokenorders" value="<?php echo(rand(10000,99999));?>" />
+                <form method="post" action="checkout.php" name="checkout">
+                    <input type="hidden" name="torders" value="<?php echo(rand(10000,99999));?>" />
                     <button type="submit" name="checkout" class="btn btn-primary checkout">Оформить заказ</button>
                 </form>
                 <?php
 
-                sendOrders($pdo);
+                //sendOrders($pdo);
         } else {
             echo "Ваша корзина пуста";
         }
@@ -87,15 +83,6 @@
         //header('Location: ../chek.php'); exit();
     }
     ?>
-        <?php
-        }
-        else {
-        echo "Вам необходимо пройти авторизацию";
-        ?>
-        <p>Через 5 секунд будет произведено перенаправление на страницу авторизации</p>
-        <script> window.setTimeout(function() { window.location = 'login.php'; }, 5000) </script>
-        <?php
-    }
-    ?>
+
 </div>
 <?php include_once __DIR__ . '/footer.php'; ?>

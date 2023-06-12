@@ -29,7 +29,7 @@
                     <div class="col-6">
                         <div class="showproduct-img">
                             <div class="main-content-img-product">
-                                <img src="images/img1.jpg" alt="<?php echo $product['name'];?>">
+                                <img src="images/<?= $product['image'];?>" alt="<?php echo $product['name'];?>">
                             </div>
                         </div> <!-- class="showproduct-img" -->
                     </div>
@@ -44,7 +44,7 @@
                     </div>
                 </div> <!-- class="row" -->
             </div> <!-- class="container" -->
-                              <form method="post" action="cartproduct">
+                              <form method="post" action="index.php">
                                   <input type="hidden"  name="prodid" value="<?= $product['id'];?>">
                                   <button type="submit" class="btn btn-success">Добавить в корзину</button>
                               </form>

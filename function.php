@@ -15,6 +15,41 @@ function shtml($param){
 }
 
 /**
+ * Показ списка товаров
+ * @param $result
+ * @return void
+ */
+function showProduct($result){
+    ?>
+      <div class="container">
+          <div class="row">
+        <?php while($product = $result->fetch()){ ?>
+              <div class="col-4">
+                  <h3><?= $product['name'];?></h3>
+                  <p><?= $product['price'];?></p>
+                  <div class="main-content-img">
+                      <img src="images/<?= $product['image'];?>" alt="<?php echo $product['name'];?>">
+                  </div>
+                  <div class="btn-show-product">
+                      <form method="post" action="http://<?= $_SERVER["SERVER_NAME"].'/showproduct.php'?>" name="showproduct">
+                          <input type="hidden"  name="showprodid" value="<?= $product['id'];?>">
+                          <button type="submit" class="btn btn-success">Подробно</button>
+                      </form>
+                  </div>
+
+                  <form method="post" action="" name="cartproductform">
+                      <input type="hidden"  name="prodid" value="<?= $product['id'];?>">
+                      <button type="submit"  name="cartproduct" class="btn btn-success cartproduct">Добавить в корзину</button>
+                  </form>
+
+              </div>
+         <?php } ?>
+          </div> <!-- class="row" -->
+        </div> <!-- class="container" -->
+    <?php
+}
+
+/**
  * Получение товаров
  * @param $pdo
  * @return void
@@ -31,66 +66,17 @@ function getProduct($pdo){
         $result = $pdo->prepare($sql);
         $result->bindValue(":id", $id);
         $result->execute();
-        ?>
-         <div class="container">
-          <div class="row">
-        <?php while($product = $result->fetch()){ ?>
-              <div class="col-4">
-                  <h3><?= $product['name'];?></h3>
-                  <p><?= $product['price'];?></p>
-                  <div class="main-content-img">
-                      <img src="images/img1.jpg" alt="<?php echo $product['name'];?>">
-                  </div>
-                  <div class="btn-show-product">
-                      <form method="post" action="http://<?= $_SERVER["SERVER_NAME"].'/showproduct.php'?>" name="showproduct">
-                          <input type="hidden"  name="showprodid" value="<?= $product['id'];?>">
-                          <button type="submit" class="btn btn-success">Подробно</button>
-                      </form>
-                  </div>
 
-                  <form method="post" action="" name="cartproductform">
-                      <input type="hidden"  name="prodid" value="<?= $product['id'];?>">
-                      <button type="submit"  name="cartproduct" class="btn btn-success cartproduct">Добавить в корзину</button>
-                  </form>
-
-              </div>
-         <?php } ?>
-          </div>
-        </div>
-            <?
+        showProduct($result);
 
     } else {
         // Вывод всех товаров
         $sql = "SELECT * FROM products";
         $result = $pdo->query($sql);
-        ?>
-        <div class="container">
-          <div class="row">
-        <?php while($product = $result->fetch()){ ?>
-            <div class="col-4">
-                <h3><?= $product['name'];?></h3>
-                <p><?= $product['price'];?></p>
-                <div class="main-content-img">
-                    <img src="images/img1.jpg" alt="<?= $product['name'];?>">
-                </div>
-                <div class="btn-show-product">
-                    <form method="post" action="http://<?= $_SERVER["SERVER_NAME"].'/showproduct.php'?>">
-                        <input type="hidden"  name="showprodid" value="<?= $product['id'];?>">
-                        <button type="submit" class="btn btn-success">Подробно</button>
-                    </form>
-                </div>
 
-                <form method="post" action="" name="cartproductform">
-                    <input type="hidden"  name="prodid" value="<?= $product['id'];?>">
-                    <button type="submit" class="btn btn-success cartproduct">Добавить в корзину</button>
-                </form>
+        showProduct($result);
 
-            </div>
-          <?php } ?>
-          </div>
-        </div>
-            <?
-       }
+       } // if
     ?>
      <p id="result_output"></p>
     <?php
@@ -303,6 +289,7 @@ function getDataUser($pdo,$userid){
  */
 function sendProductToCart()
 {
+
     if (isset($_POST['prodid']) && !empty($_POST['prodid'])) {
         $productid = $_POST['prodid'];
     }
@@ -326,11 +313,11 @@ function sendProductToCart()
  */
 function sendOrders($pdo){
 
-     if ($_POST['tokenorders'] == $_SESSION['lastTokenOrder'])
+     if ($_POST['tokencheckout'] == $_SESSION['lasttokencheckout'])
      {
          echo "";
      } else {
-         $_SESSION['lastTokenOrder'] = $_POST['tokenorders'];
+         $_SESSION['lasttokencheckout'] = $_POST['tokencheckout'];
 
          $userid = $_SESSION['id'];
          if (isset($_SESSION['orders']) && !empty($_SESSION['orders'])) {
@@ -338,15 +325,28 @@ function sendOrders($pdo){
          }
          $datauser = getDataUser($pdo, $userid);
 
+         if (isset($_POST['phone']) && (!empty($_POST['phone']))) {
+             $phone = (integer)shtml($_POST['phone']);
+             unset($_POST['phone']);
+         }
+
+         if (isset($_POST['address']) && (!empty($_POST['address']))) {
+             $address = shtml($_POST['address']);
+             unset($_POST['address']);
+         }
+
          // Создаем в заказ
-         $sqlinsert = "INSERT INTO orders (userid) VALUES (:userid)";
+         $sqlinsert = "INSERT INTO orders (userid,email,phone,address) VALUES (:userid,:email,:phone,:address)";
          $st = $pdo->prepare($sqlinsert);
          $st->bindValue(":userid", $userid);
+         $st->bindValue(":email", $datauser['email']);
+         $st->bindValue(":phone", $phone);
+         $st->bindValue(":address", $address);
          $st->execute();
 
          // Получаем id заказа
-         $orderid = getIdOrder($pdo, $userid);
-
+         $orderid = $pdo->lastInsertId();
+dd($orderid);
          // Заполняем промежуточную таблицу order_product
          $sqlinsert = "INSERT INTO order_product (product_id,order_id) VALUES (:productid,:orderid)";
          foreach ($session as $value) {
@@ -365,11 +365,7 @@ function sendOrders($pdo){
          deleteOrderSession();
          echo "Заказ оформлен";
          ?>
-         <script>
-             window.setTimeout(function(){
-                 window.location.href = "checkout.php" + window.location.search.substring(1);
-              }, 3000);
-         </script>
+
         <?php
      } //  tokenorders
 }
@@ -438,8 +434,18 @@ function getOrders($pdo,$userid){
                     <?php
                     // Вывод товаров в заказе
                     $orderid = $order['id'];
-                    getOrderProducts($pdo,$orderid);
+                    $products = getOrderProducts($pdo,$orderid);
+                    foreach ($products as $product){
+                        printf("<p>Наименование товара = %s</p>",$product['name']);
+                        printf("<p>Описане товара = %s</p>",$product['description']);
+                        printf("<p>Стоимость товара = %d</p>",$product['price']);
+                        printf("<p>Страна производитель = %s</p>",$product['country']);
+                        ?>
+                        <hr>
+                        <?php
+                    }
                     ?>
+
                 </td>
             </tr>
             <?php
@@ -447,7 +453,7 @@ function getOrders($pdo,$userid){
         }
         ?>
         </tbody>
-    </table>
+    </table>  <!-- main table-->
 
     <?php
 }
@@ -461,14 +467,10 @@ function getOrderProducts($pdo,$orderid){
     $result = $pdo->prepare($sql);
     $result->bindValue(":orderid", $orderid);
     $result->execute();
+    $products = [];
     while ($product = $result->fetch()) {
-        echo $product['name'];
-        echo $product['description'];
-        echo $product['price'];
-        echo $product['country'];
-        echo "<br>";
+        $products[] = $product;
     }
-
-
-    }
+    return $products;
+}
 ?>
