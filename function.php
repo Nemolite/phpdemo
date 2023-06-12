@@ -346,7 +346,7 @@ function sendOrders($pdo){
 
          // Получаем id заказа
          $orderid = $pdo->lastInsertId();
-dd($orderid);
+
          // Заполняем промежуточную таблицу order_product
          $sqlinsert = "INSERT INTO order_product (product_id,order_id) VALUES (:productid,:orderid)";
          foreach ($session as $value) {
@@ -365,6 +365,7 @@ dd($orderid);
          deleteOrderSession();
          echo "Заказ оформлен";
          ?>
+         <script> window.setTimeout(function() { window.location = 'thankyou.php'; }, 5000) </script>
 
         <?php
      } //  tokenorders
@@ -408,10 +409,14 @@ function deleteOrderSession(){
  * @return void
  */
 function getOrders($pdo,$userid){
+
+    // Этот
     $sql = "SELECT * FROM orders WHERE orders.userid = :userid";
     $stmt = $pdo->prepare($sql);
     $stmt->bindValue(":userid", $userid);
     $stmt->execute();
+
+
     ?>
     <table class="table">
         <thead>
