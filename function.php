@@ -468,6 +468,12 @@ function getOrders($pdo,$userid,$quantity = 'all'){
     <?php
 }
 
+/**
+ * Получение заказов и продуктов через связанные таблицы
+ * @param $pdo
+ * @param $orderid
+ * @return array
+ */
 function getOrderProducts($pdo,$orderid){
     $sql = "SELECT products.id,products.name,products.description,products.price,products.country FROM products  
         LEFT JOIN order_product ON products.id = order_product.product_id   
@@ -482,5 +488,21 @@ function getOrderProducts($pdo,$orderid){
         $products[] = $product;
     }
     return $products;
+}
+
+function getSliderProducts5($pdo){
+    $sql = "SELECT * FROM products ORDER BY id DESC LIMIT 5";
+    $result = $pdo->query($sql);
+    while($product = $result->fetch()){
+        ?>
+        <div class="inner">
+            <img src="images/<?= $product['image'];?>"
+                 alt="<?php echo $product['name'];?>">
+            <h3><?php echo $product['name'];?></h3>
+        </div>
+
+    <?php
+    }
+
 }
 ?>

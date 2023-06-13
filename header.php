@@ -10,7 +10,12 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!-- bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <!-- slick slider style-->
+    <link rel="stylesheet" type="text/css" href="css/slick.css"/>
+    <link rel="stylesheet" type="text/css" href="css/slick-theme.css"/>
+    <!-- my style -->
     <link rel="stylesheet" href="css/style.css">
     <title>Document</title>
 </head>
@@ -32,7 +37,7 @@
                     <li><a href="cart.php">Корзина</a></li>
                     <li><a href="account.php">Аккаунт</a></li>
                     <?php } ?>
-                    <li><a href="">О нас</a></li>
+                    <li><a href="onas.php">О нас</a></li>
                     <li><a href="">Наши контакты</a></li>
 
                 </ul>
