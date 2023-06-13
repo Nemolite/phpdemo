@@ -303,3 +303,11 @@ nav {
     color:white;
 }
 
+.contact-map {
+    width: 80%;
+    margin: 0 auto;
+    padding: 30px;
+    background-color: #1e7e34;
+    border-radius: 10px;
+}
+

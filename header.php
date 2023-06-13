@@ -38,7 +38,7 @@
                     <li><a href="account.php">Аккаунт</a></li>
                     <?php } ?>
                     <li><a href="onas.php">О нас</a></li>
-                    <li><a href="">Наши контакты</a></li>
+                    <li><a href="contact.php">Наши контакты</a></li>
 
                 </ul>
             </nav>
