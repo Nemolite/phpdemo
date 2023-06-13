@@ -8,8 +8,8 @@ if (isset($_SESSION['id'])&&!empty($_SESSION['id'])) {
     printf('<h3>Пользователь %s</h3>',$user['name']);
     printf('<h3>Email %s</h3>',$user['email']);
 ?>
-
-
+    <h2 class="account-title">Мои заказы</h2>
+<?php getOrders($pdo,$userid);?>
 <?php
 }
 else {

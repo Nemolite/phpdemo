@@ -4,7 +4,7 @@
     <?php
     if (isset($_SESSION['id'])&&!empty($_SESSION['id'])) {
         $userid = $_SESSION['id'];
-        getOrders($pdo,$userid);
+        getOrders($pdo,$userid,'last');
     }
     else {
     echo "Вам необходимо пройти авторизацию";

@@ -402,16 +402,21 @@ function deleteOrderSession(){
 
 }
 
-/**
- * Получение заказа пользователя
+/** Получение всех (одного) закза пользователя
  * @param $pdo
  * @param $userid
+ * @param $quantity
  * @return void
  */
-function getOrders($pdo,$userid){
+function getOrders($pdo,$userid,$quantity = 'all'){
 
-    // Этот
-    $sql = "SELECT * FROM orders WHERE orders.userid = :userid ORDER BY id DESC LIMIT 1";
+    if ($quantity == 'all') {
+        $add_sql = "";
+    } elseif($quantity == 'last') {
+        $add_sql = " ORDER BY id DESC LIMIT 1";
+    }
+
+    $sql = "SELECT * FROM orders WHERE orders.userid = :userid" . $add_sql;
     $stmt = $pdo->prepare($sql);
     $stmt->bindValue(":userid", $userid);
     $stmt->execute();
