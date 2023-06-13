@@ -48,11 +48,14 @@
             if (isset($_SESSION['id'])&&!empty($_SESSION['id'])) {
             ?>
                 <p>Привет, <?php echo getNameUser($pdo);?>
-                <a href="http://<?= $_SERVER["SERVER_NAME"]?>/?exit=true">Выход</a></p>
+                <a href="http://<?= $_SERVER["SERVER_NAME"]?>/index.php?exit=true">Выход</a></p>
                 <?php
+
                  if (isset($_GET['exit'])){
                      unset($_SESSION['id']);
-                     header('index.php');
+                     ?>
+                     <script> window.setTimeout(function() { window.location = 'index.php'; }, 500) </script>
+                     <?php
                  }
              ?>
 

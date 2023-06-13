@@ -46,7 +46,11 @@
                     <td><?php echo $product['name']?></td>
                     <td><?php echo $product['price']?></td>
                     <td><?php echo $product['description']?></td>
-                    <td><?php echo $product['image']?></td>
+                    <td>
+                        <div class="product-mini">
+                            <img src="images/<?= $product['image'];?>" alt="<?php echo $product['name'];?>">
+                        </div>
+                    </td>
                     <td><?php echo $product['country']?></td>
                     <td><a href="" class="btn btn-danger">Удалить</a></td>
                 </tr>
