@@ -58,7 +58,7 @@ function getProduct($pdo){
     if (isset($_GET['id'])&&($_GET['id']!=NULL)){
         $id = shtml($_GET['id']);
         unset($_GET['id']);
-        $sql = "SELECT products.id,products.name,products.description,products.price,products.country FROM categories 
+        $sql = "SELECT products.id,products.name,products.description,products.price,products.image,products.country FROM categories 
         LEFT JOIN category_product ON categories.id = category_product.category_id 
         LEFT JOIN products ON category_product.product_id = products.id 
         WHERE categories.id = :id";
@@ -411,12 +411,10 @@ function deleteOrderSession(){
 function getOrders($pdo,$userid){
 
     // Этот
-    $sql = "SELECT * FROM orders WHERE orders.userid = :userid";
+    $sql = "SELECT * FROM orders WHERE orders.userid = :userid ORDER BY id DESC LIMIT 1";
     $stmt = $pdo->prepare($sql);
     $stmt->bindValue(":userid", $userid);
     $stmt->execute();
-
-
     ?>
     <table class="table">
         <thead>
@@ -424,6 +422,7 @@ function getOrders($pdo,$userid){
             <th scope="col">№пп</th>
             <th scope="col">Номер заказа</th>
             <th scope="col">Товары</th>
+            <th scope="col">Статус заказа</th>
         </tr>
         </thead>
         <tbody>
@@ -452,6 +451,7 @@ function getOrders($pdo,$userid){
                     ?>
 
                 </td>
+                <td><p class="order-status">Исполнен</p></td>
             </tr>
             <?php
             $index++;
