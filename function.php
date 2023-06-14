@@ -505,4 +505,34 @@ function getSliderProducts5($pdo){
     }
 
 }
+
+function delProductCart($pdo){
+    if ($_POST['tokendelidcart'] == $_SESSION['lasttokendelidcart'])
+    {
+        echo "";
+    } else {
+        $_SESSION['lasttokendelidcart'] = $_POST['tokendelidcart'];
+
+        if (isset($_POST['delidcart']) && (!empty($_POST['delidcart']))) {
+            $delidcart = shtml($_POST['delidcart']);
+            unset($_POST['delidcart']);
+        }
+
+        if (isset($_SESSION['orders']) && !empty($_SESSION['orders'])) {
+            $index = 0;
+            foreach ($_SESSION['orders'] as $orders){
+                if ($_SESSION['orders'][$index][1]==$delidcart){
+                    unset($_SESSION['orders'][$index][1]);
+                }
+                $index++;
+
+            }
+
+        }
+
+        ?>
+        <script> window.setTimeout(function() { window.location = 'cart.php'; }, 500) </script>
+        <?php
+    }
+}
 ?>

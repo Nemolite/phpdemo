@@ -52,7 +52,14 @@
                         </div>
                     </td>
                     <td><?php echo $product['country']?></td>
-                    <td><a href="" class="btn btn-danger">Удалить</a></td>
+                    <td>
+                        <form method="post" action="" name="delproductcartform<?php echo $product['name']?>">
+                            <input type="hidden" name="delidcart" value="<?php echo $product['id']?>" />
+                            <input type="hidden" name="tokendelidcart" value="<?php echo(rand(10000,99999));?>" />
+                            <button type="submit" class="btn btn-danger">Удалить</button>
+                        </form>
+                        <?php delProductCart($pdo);?>
+                     </td>
                 </tr>
                 <?php
                 $index++;
