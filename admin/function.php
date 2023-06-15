@@ -265,6 +265,13 @@ function delAdminCategory($pdo){
             unset($_POST['delidcategory']);
         }
 
+        // Удаление из таблицы category_product
+        $sqldelcp = "DELETE FROM category_product WHERE category_id = :categoryid";
+        $stcp = $pdo->prepare($sqldelcp);
+        $stcp->bindValue(":categoryid", $delcatid);
+        $stcp->execute();
+
+        // Удаление из таблицы categories
         $sqldel = "DELETE FROM categories WHERE id = :categoryid";
         $st = $pdo->prepare($sqldel);
         $st->bindValue(":categoryid", $delcatid);
