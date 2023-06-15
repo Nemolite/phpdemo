@@ -15,7 +15,18 @@ function getAdminCategory($pdo){
         ?>
         <h3><?php echo $category['name'];?></h3>
         <p><?= $category['description'];?></p>
-
+<div class="category-event">
+    <form method="post" action="" name="delcategory<?php echo $category['id']?>">
+        <input type="hidden" name="delidcategory" value="<?php echo $category['id']?>" />
+        <input type="hidden" name="tokendelidcategory" value="<?php echo(rand(10000,99999));?>" />
+        <button type="submit" class="btn btn-danger">Удалить</button>
+    </form>
+    <form method="post" action="updatecategory.php" name="updatecategory<?php echo $category['id']?>">
+        <input type="hidden" name="updatidcategory" value="<?php echo $category['id']?>" />
+        <input type="hidden" name="tokenupdatidcategory" value="<?php echo(rand(10000,99999));?>" />
+        <button type="submit" class="btn btn-warning">Изменить</button>
+    </form>
+</div>
         <?php
         }
     }
@@ -163,7 +174,69 @@ function setAdminProduct($pdo){
             $msg =  "Товар добавлена";
             unset($row);
         }
-    } //tokenadminproduct
+
+    } //tokenupadminproduct
     echo $msg;
+
+}
+
+function getUpdateCategory($pdo){
+    if ($_POST['tokenupdatidcategory'] == $_SESSION['lasttokenupdatidcategory'])
+    {
+        $msg = "";
+    } else {
+        $_SESSION['lasttokenupdatidcategory'] = $_POST['tokenupdatidcategory'];
+
+        if (isset($_POST['updatidcategory']) && (!empty($_POST['updatidcategory']))) {
+            $updatidcategory = shtml($_POST['updatidcategory']);
+            unset($_POST['updatidcategory']);
+        }
+
+        $sth = $pdo->prepare("SELECT * FROM categories WHERE categories.id = ?");
+        $sth->execute(array($updatidcategory));
+        $updatcategory =  $sth->fetch();
+
+        return $updatcategory;
+    }
+}
+
+function upAdminCategory($pdo){
+    if ($_POST['tokenupadmincategory'] == $_SESSION['lasttokenupadmincategory'])
+    {
+        echo "";
+    } else {
+        $_SESSION['lasttokenupadmincategory'] = $_POST['tokenupadmincategory'];
+
+        if (isset($_POST['name']) && (!empty($_POST['name']))) {
+            $name = shtml($_POST['name']);
+            unset($_POST['name']);
+        }
+        if (isset($_POST['description']) && (!empty($_POST['description']))) {
+            $description = shtml($_POST['description']);
+            unset($_POST['description']);
+        }
+
+        if (isset($_POST['upadmincategoryid']) && (!empty($_POST['upadmincategoryid']))) {
+            $categoryid = shtml($_POST['upadmincategoryid']);
+            unset($_POST['upadmincategoryid']);
+        }
+
+        $sqlupdate = "UPDATE categories SET name = :name, description= :description WHERE id = :categoryid";
+        $st = $pdo->prepare($sqlupdate);
+        $st->bindValue(":name", $name);
+        $st->bindValue(":description", $description);
+        $st->bindValue(":categoryid", $categoryid);
+        $row = $st->execute();
+        if ($row > 0) {
+            $msg = "Категория изменена";
+            unset($row);
+
+        }
+        echo $msg;
+        ?>
+        <script> window.setTimeout(function() { window.location = 'categories.php'; }, 2000) </script>
+        <?php
+
+    } // tokenadmincategory
 }
 ?>
