@@ -131,6 +131,7 @@ function getAdminProducts($pdo){
           ?>
             </tbody>
         </table>
+    <?php delAdminProduct($pdo);?>
 <?php
 }
 
@@ -403,8 +404,50 @@ function upAdminProduct($pdo) {
         <?php
 
     } //tokenupadminproduct
+}
 
+function delAdminProduct($pdo) {
+    if ($_POST['tokendelproduct'] == $_SESSION['lasttokendelproduct'])
+    {
+        $msg = "";
+    } else {
+        $_SESSION['lasttokendelproduct'] = $_POST['tokendelproduct'];
+
+
+        if (isset($_POST['delidproduct']) && (!empty($_POST['delidproduct']))) {
+            $delidproduct = (integer)shtml($_POST['delidproduct']);
+            unset($_POST['delidproduct']);
+        }
+
+        // Удаление из таблицы category_product
+        $sqldelcp = "DELETE FROM category_product WHERE product_id  = :productid ";
+        $stcp = $pdo->prepare($sqldelcp);
+        $stcp->bindValue(":productid", $delidproduct);
+        $stcp->execute();
+
+        // Удаление из таблицы category_product
+        $sqldelop = "DELETE FROM order_product WHERE product_id  = :productid ";
+        $stcpop = $pdo->prepare($sqldelop);
+        $stcpop->bindValue(":productid", $delidproduct);
+        $stcpop->execute();
+
+        // Удаление из таблицы products
+        $sqldel = "DELETE FROM products WHERE id = :delidproduct";
+        $st = $pdo->prepare($sqldel);
+        $st->bindValue(":delidproduct", $delidproduct);
+        $row = $st->execute();
+        if ($row > 0) {
+            $msg = "Товар удален";
+            unset($row);
+
+        }
+        echo $msg;
+        ?>
+        <script> window.setTimeout(function() { window.location = 'products.php'; }, 2000) </script>
+        <?php
+
+    }
 }
 ?>
-
-
+<input type="hidden" name="delidproduct" value="<?php echo $product['id']?>" />
+<input type="hidden" name="tokendelproduct" value="<?php echo(rand(10000,99999));?>" />
