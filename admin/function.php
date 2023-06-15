@@ -27,6 +27,7 @@ function getAdminCategory($pdo){
         <button type="submit" class="btn btn-warning">Изменить</button>
     </form>
 </div>
+        <?php delAdminCategory($pdo)?>
         <?php
         }
     }
@@ -57,10 +58,16 @@ function setAdminCategory($pdo) {
 
         $st->bindValue(":name", $name);
         $st->bindValue(":description", $description);
-        $row = $st->execute();
+        if ($name){
+            $row = $st->execute();
+        }
+
         if ($row > 0) {
             echo "Категория добавлена";
             unset($row);
+            ?>
+            <script> window.setTimeout(function() { window.location = 'categories.php'; }, 2000) </script>
+            <?php
         }
     } // tokenadmincategory
 }
@@ -200,10 +207,15 @@ function getUpdateCategory($pdo){
     }
 }
 
+/**
+ * Обновление категории в админке
+ * @param $pdo
+ * @return void
+ */
 function upAdminCategory($pdo){
     if ($_POST['tokenupadmincategory'] == $_SESSION['lasttokenupadmincategory'])
     {
-        echo "";
+        $msg = "";
     } else {
         $_SESSION['lasttokenupadmincategory'] = $_POST['tokenupadmincategory'];
 
@@ -239,4 +251,35 @@ function upAdminCategory($pdo){
 
     } // tokenadmincategory
 }
+
+function delAdminCategory($pdo){
+    if ($_POST['tokendelidcategory'] == $_SESSION['lasttokendelidcategory'])
+    {
+        $msg = "";
+    } else {
+        $_SESSION['lasttokendelidcategory'] = $_POST['tokendelidcategory'];
+
+
+        if (isset($_POST['delidcategory']) && (!empty($_POST['delidcategory']))) {
+            $delcatid = shtml($_POST['delidcategory']);
+            unset($_POST['delidcategory']);
+        }
+
+        $sqldel = "DELETE FROM categories WHERE id = :categoryid";
+        $st = $pdo->prepare($sqldel);
+        $st->bindValue(":categoryid", $delcatid);
+        $row = $st->execute();
+        if ($row > 0) {
+            $msg = "Категория удалена";
+            unset($row);
+
+        }
+        echo $msg;
+        ?>
+        <script> window.setTimeout(function() { window.location = 'categories.php'; }, 2000) </script>
+        <?php
+
+    }
+}
 ?>
+
