@@ -316,3 +316,17 @@ nav {
     display: flex;
     flex-direction: row;
 }
+
+.cat-color {
+    color: red;
+}
+
+.mini-img-admin-product {
+    width: 100px;
+    height: 100px;
+}
+
+.mini-img-admin-product img {
+    width: 100%;
+    height: 100%;
+}

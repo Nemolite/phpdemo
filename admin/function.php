@@ -15,18 +15,18 @@ function getAdminCategory($pdo){
         ?>
         <h3><?php echo $category['name'];?></h3>
         <p><?= $category['description'];?></p>
-<div class="category-event">
-    <form method="post" action="" name="delcategory<?php echo $category['id']?>">
-        <input type="hidden" name="delidcategory" value="<?php echo $category['id']?>" />
-        <input type="hidden" name="tokendelidcategory" value="<?php echo(rand(10000,99999));?>" />
-        <button type="submit" class="btn btn-danger">Удалить</button>
-    </form>
-    <form method="post" action="updatecategory.php" name="updatecategory<?php echo $category['id']?>">
-        <input type="hidden" name="updatidcategory" value="<?php echo $category['id']?>" />
-        <input type="hidden" name="tokenupdatidcategory" value="<?php echo(rand(10000,99999));?>" />
-        <button type="submit" class="btn btn-warning">Изменить</button>
-    </form>
-</div>
+            <div class="category-event">
+                <form method="post" action="" name="delcategory<?php echo $category['id']?>">
+                    <input type="hidden" name="delidcategory" value="<?php echo $category['id']?>" />
+                    <input type="hidden" name="tokendelidcategory" value="<?php echo(rand(10000,99999));?>" />
+                    <button type="submit" class="btn btn-danger">Удалить</button>
+                </form>
+                <form method="post" action="updatecategory.php" name="updatecategory<?php echo $category['id']?>">
+                    <input type="hidden" name="updatidcategory" value="<?php echo $category['id']?>" />
+                    <input type="hidden" name="tokenupdatidcategory" value="<?php echo(rand(10000,99999));?>" />
+                    <button type="submit" class="btn btn-warning">Изменить</button>
+                </form>
+            </div>
         <?php delAdminCategory($pdo)?>
         <?php
         }
@@ -104,11 +104,25 @@ function getAdminProducts($pdo){
                     <td><?php echo $product['name']?></td>
                     <td><?php echo $product['price']?></td>
                     <td><?php echo $product['description']?></td>
-                    <td><?php echo $product['image']?></td>
+                    <td>
+                        <div class="mini-img-admin-product">
+                            <img src="../images/<?= $product['image'];?>" alt="<?php echo $product['name'];?>">
+                        </div>
+                    </td>
                     <td><?php echo $product['country']?></td>
                     <td>
-                        <a href="" class="btn btn-warning">Изменить</a>
-                        <a href="" class="btn btn-danger">Удалить</a>
+                        <div class="category-event">
+                            <form method="post" action="" name="delproduct<?php echo $product['id']?>">
+                                <input type="hidden" name="delidproduct" value="<?php echo $product['id']?>" />
+                                <input type="hidden" name="tokendelproduct" value="<?php echo(rand(10000,99999));?>" />
+                                <button type="submit" class="btn btn-danger">Удалить</button>
+                            </form>
+                            <form method="post" action="updateproduct.php" name="updatecategory<?php echo $product['id']?>">
+                                <input type="hidden" name="upidproduct" value="<?php echo $product['id']?>" />
+                                <input type="hidden" name="tokenupproduct" value="<?php echo(rand(10000,99999));?>" />
+                                <button type="submit" class="btn btn-warning">Изменить</button>
+                            </form>
+                        </div>
                     </td>
                 </tr>
                 <?php
@@ -219,18 +233,19 @@ function upAdminCategory($pdo){
     } else {
         $_SESSION['lasttokenupadmincategory'] = $_POST['tokenupadmincategory'];
 
+        if (isset($_POST['upadmincategoryid']) && (!empty($_POST['upadmincategoryid']))) {
+            $categoryid = shtml($_POST['upadmincategoryid']);
+            unset($_POST['upadmincategoryid']);
+        }
+
         if (isset($_POST['name']) && (!empty($_POST['name']))) {
             $name = shtml($_POST['name']);
             unset($_POST['name']);
         }
+
         if (isset($_POST['description']) && (!empty($_POST['description']))) {
             $description = shtml($_POST['description']);
             unset($_POST['description']);
-        }
-
-        if (isset($_POST['upadmincategoryid']) && (!empty($_POST['upadmincategoryid']))) {
-            $categoryid = shtml($_POST['upadmincategoryid']);
-            unset($_POST['upadmincategoryid']);
         }
 
         $sqlupdate = "UPDATE categories SET name = :name, description= :description WHERE id = :categoryid";
@@ -288,5 +303,108 @@ function delAdminCategory($pdo){
 
     }
 }
+
+function getAdminProductUpdate($pdo){
+
+    if ($_POST['tokenupproduct'] == $_SESSION['lasttokenupproduct'])
+    {
+        $msg = "";
+    } else {
+        $_SESSION['lasttokenupproduct'] = $_POST['tokenupproduct'];
+
+        if (isset($_POST['upidproduct']) && (!empty($_POST['upidproduct']))) {
+            $upidproduct = shtml($_POST['upidproduct']);
+            unset($_POST['upidproduct']);
+        }
+
+        $sth = $pdo->prepare("SELECT * FROM products WHERE products.id = ?");
+        if ($upidproduct) {
+            $sth->execute(array($upidproduct));
+        }
+
+        $updatproduct =  $sth->fetch();
+
+        return $updatproduct;
+    } // tokenupproduct
+}
+
+function upAdminProduct($pdo) {
+    if ($_POST['tupproduct'] == $_SESSION['lasttupproduct'])
+    {
+        $msg = "";
+    } else {
+        $_SESSION['lasttupproduct'] = $_POST['tupproduct'];
+
+        if (isset($_POST['upproductid']) && (!empty($_POST['upproductid']))) {
+            $upproductid = shtml($_POST['upproductid']);
+            unset($_POST['upproductid']);
+        }
+
+        if (isset($_POST['name']) && (!empty($_POST['name']))) {
+            $name = shtml($_POST['name']);
+            unset($_POST['name']);
+        }
+        if (isset($_POST['price']) && (!empty($_POST['price']))) {
+            $price = (integer)shtml($_POST['price']);
+            unset($_POST['price']);
+        }
+        if (isset($_POST['description']) && (!empty($_POST['description']))) {
+            $description = shtml($_POST['description']);
+            unset($_POST['description']);
+        }
+
+        if (isset($_POST['country']) && (!empty($_POST['country']))) {
+            $country = shtml($_POST['country']);
+            unset($_POST['country']);
+        }
+
+        $filename = basename($_FILES['image']['name']);
+        $uploadfile = $_SERVER["DOCUMENT_ROOT"] . '/images/' . basename($_FILES['image']['name']);
+        move_uploaded_file($_FILES['image']['tmp_name'], $uploadfile);
+
+        $sqlupdate = "UPDATE products 
+                      SET name = :name, description= :description,price= :price,country= :country,image= :image 
+                      WHERE id = :upproductid";
+
+        $st = $pdo->prepare($sqlupdate);
+
+        $st->bindValue(":name", $name);
+        $st->bindValue(":price", $price);
+        $st->bindValue(":description", $description);
+        $st->bindValue(":country", $country);
+        $st->bindValue(":image", $filename);
+        $st->bindValue(":upproductid", $upproductid);
+
+        $row = $st->execute();
+
+        // Добавление связей с категориями
+        if (isset($_POST['categories']) && (!empty($_POST['categories']))) {
+            $categories = $_POST['categories'];
+            unset($_POST['categories']);
+        }
+
+        $sqlinsert = "INSERT INTO category_product (category_id, product_id ) 
+                      VALUES (:categoryid, :productid)";
+        $st = $pdo->prepare($sqlinsert);
+
+        foreach ($categories as $categoryid){
+            $st->bindValue(":categoryid", $categoryid);
+            $st->bindValue(":productid", $upproductid);
+            $st->execute();
+        }
+
+        if ($row > 0) {
+            $msg =  "Товар добавлена";
+            unset($row);
+        }
+        echo $msg;
+        ?>
+        <script> window.setTimeout(function() { window.location = 'products.php'; }, 2000) </script>
+        <?php
+
+    } //tokenupadminproduct
+
+}
 ?>
+
 
