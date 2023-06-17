@@ -490,6 +490,11 @@ function getOrderProducts($pdo,$orderid){
     return $products;
 }
 
+/**
+ * Вывод 5 последних товаров в слайдере
+ * @param $pdo
+ * @return void
+ */
 function getSliderProducts5($pdo){
     $sql = "SELECT * FROM products ORDER BY id DESC LIMIT 5";
     $result = $pdo->query($sql);
@@ -506,6 +511,11 @@ function getSliderProducts5($pdo){
 
 }
 
+/**
+ * Удаление товаров из корзины
+ * @param $pdo
+ * @return void
+ */
 function delProductCart($pdo){
     if ($_POST['tokendelidcart'] == $_SESSION['lasttokendelidcart'])
     {

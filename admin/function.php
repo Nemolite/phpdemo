@@ -135,6 +135,11 @@ function getAdminProducts($pdo){
 <?php
 }
 
+/**
+ * Добавление товаров
+ * @param $pdo
+ * @return void
+ */
 function setAdminProduct($pdo){
     if ($_POST['tokenadminproduct'] == $_SESSION['lasttokenadminproduct'])
     {
@@ -202,6 +207,11 @@ function setAdminProduct($pdo){
 
 }
 
+/**
+ * Получение товаров в форму обновления
+ * @param $pdo
+ * @return mixed|void
+ */
 function getUpdateCategory($pdo){
     if ($_POST['tokenupdatidcategory'] == $_SESSION['lasttokenupdatidcategory'])
     {
@@ -268,6 +278,11 @@ function upAdminCategory($pdo){
     } // tokenadmincategory
 }
 
+/**
+ * Удаление категории
+ * @param $pdo
+ * @return void
+ */
 function delAdminCategory($pdo){
     if ($_POST['tokendelidcategory'] == $_SESSION['lasttokendelidcategory'])
     {
@@ -305,6 +320,11 @@ function delAdminCategory($pdo){
     }
 }
 
+/**
+ * Получение товара для обновления
+ * @param $pdo
+ * @return mixed|void
+ */
 function getAdminProductUpdate($pdo){
 
     if ($_POST['tokenupproduct'] == $_SESSION['lasttokenupproduct'])
@@ -329,6 +349,11 @@ function getAdminProductUpdate($pdo){
     } // tokenupproduct
 }
 
+/**
+ * Обновление товара
+ * @param $pdo
+ * @return void
+ */
 function upAdminProduct($pdo) {
     if ($_POST['tupproduct'] == $_SESSION['lasttupproduct'])
     {
@@ -406,6 +431,11 @@ function upAdminProduct($pdo) {
     } //tokenupadminproduct
 }
 
+/**
+ * Удаление товара
+ * @param $pdo
+ * @return void
+ */
 function delAdminProduct($pdo) {
     if ($_POST['tokendelproduct'] == $_SESSION['lasttokendelproduct'])
     {
@@ -449,5 +479,3 @@ function delAdminProduct($pdo) {
     }
 }
 ?>
-<input type="hidden" name="delidproduct" value="<?php echo $product['id']?>" />
-<input type="hidden" name="tokendelproduct" value="<?php echo(rand(10000,99999));?>" />
